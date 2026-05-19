@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Softly Secure — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFF8F0; --header:#F7D6E0; --btn:#C86B85; --btn-hover:#b25771;
+    --text:#4A4A4A; --accent:#A3B5A6; --card:#fff;
+    --shadow:0 6px 20px rgba(74,74,74,.08);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;line-height:1.55}
+  h1,h2,h3{font-family:'Playfair Display',serif;color:var(--text);margin:0 0 .5em}
+  header.site{background:var(--header);padding:28px 20px;text-align:center;border-bottom-left-radius:var(--radius);border-bottom-right-radius:var(--radius);box-shadow:var(--shadow)}
+  header.site h1{font-size:2rem}
+  header.site p{margin:6px 0 0;font-style:italic}
+  nav.menu{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:18px;max-width:1100px;margin:0 auto}
+  nav.menu button{background:#fff;color:var(--text);border:1px solid var(--header);padding:10px 14px;border-radius:999px;font-family:'Lato';font-size:.9rem;cursor:pointer;transition:.2s;box-shadow:var(--shadow)}
+  nav.menu button:hover{background:var(--header)}
+  nav.menu button.active{background:var(--btn);color:#fff;border-color:var(--btn)}
+  main{max-width:760px;margin:10px auto 40px;padding:0 16px}
+  .tool{display:none;background:var(--card);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);animation:fade .3s ease}
+  .tool.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .tool h2{color:var(--btn);font-size:1.6rem}
+  button.primary, .btn{background:var(--btn);color:#fff;border:none;padding:12px 22px;border-radius:999px;font-family:'Lato';font-weight:700;cursor:pointer;font-size:1rem;transition:.2s;box-shadow:var(--shadow)}
+  button.primary:hover,.btn:hover{background:var(--btn-hover)}
+  button.ghost{background:#fff;color:var(--btn);border:2px solid var(--btn)}
+  select,input[type=text],textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #e6d5da;font-family:'Lato';font-size:1rem;background:#fff;color:var(--text);margin:6px 0 14px}
+  textarea{min-height:120px;resize:vertical}
+  label{display:block;margin:10px 0 4px;font-weight:700}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .result{margin-top:18px;padding:16px;background:#FFF1F4;border-left:4px solid var(--accent);border-radius:12px;white-space:pre-wrap}
+  .qbox{background:#FFF1F4;padding:14px;border-radius:12px;margin:10px 0}
+  .qbox p{margin:0 0 8px;font-weight:700}
+  .yn{display:inline-flex;gap:8px}
+  .yn button{padding:6px 18px;border-radius:999px;border:1px solid var(--btn);background:#fff;color:var(--btn);cursor:pointer}
+  .yn button.sel{background:var(--btn);color:#fff}
+  .check{display:flex;align-items:flex-start;gap:10px;margin:10px 0;background:#FFF1F4;padding:12px;border-radius:12px}
+  .check input{margin-top:4px;transform:scale(1.3);accent-color:var(--btn)}
+  .timer{font-family:'Playfair Display';font-size:5rem;text-align:center;color:var(--btn);margin:18px 0}
+  .breath-wrap{display:flex;flex-direction:column;align-items:center;margin:20px 0}
+  .breath{width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,var(--header),var(--accent));transition:transform 4s ease;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Playfair Display';font-size:1.4rem;box-shadow:var(--shadow)}
+  .day-card{background:linear-gradient(135deg,var(--header),#fff);padding:22px;border-radius:14px;text-align:center;margin:14px 0}
+  .day-card h3{color:var(--btn)}
+  footer{text-align:center;padding:24px;color:var(--text);font-size:.9rem;opacity:.8}
+  .copy-btn{margin-top:10px}
+  @media(max-width:600px){
+    header.site h1{font-size:1.5rem}
+    .tool{padding:20px}
+    .timer{font-size:3.5rem}
+    .breath{width:140px;height:140px;font-size:1.1rem}
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <h1>Softly Secure</h1>
+  <p>Tools to help you feel calm, clear, and chosen — by yourself.</p>
+</header>
+
+<nav class="menu" id="menu"></nav>
+
+<main id="main">
+
+<!-- 2. Timer -->
+<section class="tool" id="t-timer">
+  <h2>10-Minute Rule Timer</h2>
+  <p>Feel the urge to text? Wait 10 minutes. You're rewiring your nervous system.</p>
+  <div class="timer" id="timerDisplay">10:00</div>
+  <div class="row" style="justify-content:center">
+    <button class="primary" onclick="startTimer()">Start</button>
+    <button class="ghost" onclick="resetTimer()">Reset</button>
+  </div>
+  <div id="timerMsg" class="result" style="display:none"></div>
+</section>
+
+<!-- 3. Texting Script -->
+<section class="tool" id="t-text">
+  <h2>Texting Script Generator</h2>
+  <label>Select your situation:</label>
+  <select id="textSit">
+    <option value="">— choose —</option>
+    <option value="noreply">He hasn't replied</option>
+    <option value="clarity">I need clarity</option>
+    <option value="askout">I want to ask him out</option>
+  </select>
+  <button class="primary" onclick="genText()">Generate Script</button>
+  <div id="textOut" class="result" style="display:none"></div>
+  <button class="btn copy-btn" id="textCopy" style="display:none" onclick="copyText('textOut',this)">Copy</button>
+</section>
+
+<!-- 4. Busy or Ghosting -->
+<section class="tool" id="t-ghost">
+  <h2>Is He Busy or Ghosting?</h2>
+  <div id="ghostQs"></div>
+  <button class="primary" onclick="scoreGhost()">See result</button>
+  <div id="ghostOut" class="result" style="display:none"></div>
+</section>
+
+<!-- 5. Dating or Option -->
+<section class="tool" id="t-option">
+  <h2>Are We Dating or Am I an Option?</h2>
+  <div id="optionQs"></div>
+  <button class="primary" onclick="scoreOption()">See result</button>
+  <div id="optionOut" class="result" style="display:none"></div>
+</section>
+
+<!-- 6. Boundary -->
+<section class="tool" id="t-boundary">
+  <h2>Boundary Script Builder</h2>
+  <label>Select scenario:</label>
+  <select id="bScene">
+    <option value="">— choose —</option>
+    <option value="late">He cancels last minute (again)</option>
+    <option value="latetext">He only texts late at night</option>
+    <option value="undefined">He won't define the relationship</option>
+    <option value="rude">He's dismissive of your feelings</option>
+  </select>
+  <button class="primary" onclick="genBoundary()">Generate Script</button>
+  <div id="bOut" class="result" style="display:none"></div>
+  <button class="btn copy-btn" id="bCopy" style="display:none" onclick="copyText('bOut',this)">Copy</button>
+</section>
+
+<!-- 7. Walk Away -->
+<section class="tool" id="t-walk">
+  <h2>When to Walk Away Checklist</h2>
+  <div id="walkQs"></div>
+  <button class="primary" onclick="scoreWalk()">Get my score</button>
+  <div id="walkOut" class="result" style="display:none"></div>
+</section>
+
+<!-- 8. 7-Day Challenge -->
+<section class="tool" id="t-challenge">
+  <h2>7-Day Choose Yourself Challenge</h2>
+  <div class="day-card" id="dayCard"></div>
+  <div class="row" style="justify-content:center">
+    <button class="primary" onclick="completeDay()">Complete Today's Task</button>
+    <button class="ghost" onclick="resetChallenge()">Restart</button>
+  </div>
+</section>
+
+<!-- 9. Attachment -->
+<section class="tool" id="t-attach">
+  <h2>Attachment Style Assessment</h2>
+  <div id="attachQs"></div>
+  <button class="primary" onclick="scoreAttach()">Reveal my style</button>
+  <div id="attachOut" class="result" style="display:none"></div>
+</section>
+
+<!-- 10. Mindset Card -->
+<section class="tool" id="t-mindset">
+  <h2>Secure Woman Mindset Card</h2>
+  <p>Pull a card. Read it twice. Carry it with you today.</p>
+  <div class="day-card" id="mindCard"><h3>Tap below to draw your card</h3></div>
+  <div class="row" style="justify-content:center">
+    <button class="primary" onclick="drawCard()">New Card</button>
+  </div>
+</section>
+
+<!-- 11. Breathing -->
+<section class="tool" id="t-breath">
+  <h2>Self-Soothing Breathing Tool</h2>
+  <p>Inhale 4 · Hold 4 · Exhale 6. Repeat as needed.</p>
+  <div class="breath-wrap">
+    <div class="breath" id="breathCircle">Ready</div>
+    <p id="breathText" style="margin-top:14px;font-size:1.1rem"></p>
+  </div>
+  <div class="row" style="justify-content:center">
+    <button class="primary" id="breathBtn" onclick="toggleBreath()">Start</button>
+  </div>
+</section>
+
+<!-- 12. Scenario Simulator -->
+<section class="tool" id="t-sim">
+  <h2>Dating Scenario Simulator</h2>
+  <div id="simBox"></div>
+  <div class="row" style="justify-content:center;margin-top:14px">
+    <button class="ghost" onclick="nextSim()">Next Scenario</button>
+  </div>
+</section>
+
+<!-- 13. 30 Days of Prompts -->
+<section class="tool" id="t-prompts">
+  <h2>30 Days of Prompts</h2>
+  <div class="day-card" id="promptCard"></div>
+  <label>Your response:</label>
+  <textarea id="promptResp" placeholder="Write freely..."></textarea>
+  <div class="row">
+    <button class="primary" onclick="savePrompt()">Save Response</button>
+    <button class="ghost" onclick="loadPrompt()">Load Saved</button>
+  </div>
+  <div id="promptMsg" class="result" style="display:none"></div>
+</section>
+
+</main>
+
+<footer>© 2026 Softly Secure</footer>
+
+<script>
+/* ---------- MENU ---------- */
+const tools = [
+  ['t-timer','10-Min Timer'],
+  ['t-text','Texting Scripts'],
+  ['t-ghost','Busy or Ghosting?'],
+  ['t-option','Dating or Option?'],
+  ['t-boundary','Boundary Scripts'],
+  ['t-walk','Walk Away Checklist'],
+  ['t-challenge','7-Day Challenge'],
+  ['t-attach','Attachment Style'],
+  ['t-mindset','Mindset Card'],
+  ['t-breath','Breathing Tool'],
+  ['t-sim','Scenario Simulator'],
+  ['t-prompts','30 Days of Prompts']
+];
+const menu = document.getElementById('menu');
+tools.forEach(([id,label],i)=>{
+  const b=document.createElement('button');
+  b.textContent=label;
+  b.onclick=()=>show(id,b);
+  menu.appendChild(b);
+  if(i===0) setTimeout(()=>show(id,b),0);
+});
+function show(id,btn){
+  document.querySelectorAll('.tool').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('#menu button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  window.scrollTo({top:document.querySelector('nav').offsetTop,behavior:'smooth'});
+}
+
+/* ---------- 2. TIMER ---------- */
+let timerInt=null,timeLeft=600;
+function fmt(s){return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
+function startTimer(){
+  if(timerInt) return;
+  document.getElementById('timerMsg').style.display='none';
+  timerInt=setInterval(()=>{
+    timeLeft--;
+    document.getElementById('timerDisplay').textContent=fmt(timeLeft);
+    if(timeLeft<=0){
+      clearInterval(timerInt);timerInt=null;
+      const m=document.getElementById('timerMsg');
+      m.textContent="You did it! This is rewiring.";
+      m.style.display='block';
+    }
+  },1000);
+}
+function resetTimer(){clearInterval(timerInt);timerInt=null;timeLeft=600;document.getElementById('timerDisplay').textContent='10:00';document.getElementById('timerMsg').style.display='none'}
+
+/* ---------- 3. TEXTING SCRIPTS ---------- */
+const textScripts={
+  noreply:`Hey — I noticed I haven't heard back. No pressure either way; just wanted to check in once and then I'll leave the ball in your court. Hope you're well.`,
+  clarity:`Hey, I've been thinking about us and I want to be honest. I really like spending time with you, and I'd love to know where you see this going. No need to answer right now — but I'd rather know than guess.`,
+  askout:`Hey! I'd love to take you out properly this week — Thursday or Saturday evening? I had a place in mind I think you'd enjoy.`
+};
+function genText(){
+  const v=document.getElementById('textSit').value;
+  if(!v) return;
+  const o=document.getElementById('textOut');
+  o.textContent=textScripts[v];o.style.display='block';
+  document.getElementById('textCopy').style.display='inline-block';
+}
+
+/* ---------- 4. GHOST ---------- */
+const ghostQs=[
+  "Has he initiated contact at least once in the last 5 days?",
+  "Did his last reply feel warm and engaged (not one-word)?",
+  "Has he made or kept plans with you in the last 2 weeks?"
+];
+renderYN('ghostQs',ghostQs,'g');
+function scoreGhost(){
+  const a=getYN('g',ghostQs.length);
+  if(a.includes(null)){alert('Answer all questions');return}
+  const yes=a.filter(x=>x).length;
+  let txt='';
+  if(yes>=2) txt="He's busy. Stay grounded — don't chase. Reach out once warmly, then return to your life.";
+  else if(yes===0) txt="He's ghosting. Don't double-text. His silence is your answer. Block, mute, or move on with grace.";
+  else txt="Not sure yet. Give it 7 more days with no extra effort from you. His actions will reveal the truth.";
+  const o=document.getElementById('ghostOut');o.textContent=txt;o.style.display='block';
+}
+
+/* ---------- 5. DATING OR OPTION ---------- */
+const optQs=[
+  "Does he plan dates in advance (not last-minute)?",
+  "Have you met people in his life (friends/family)?",
+  "Does he reply consistently within a day?",
+  "Has he talked about a future with you?",
+  "Does he prioritize seeing you over other plans sometimes?"
+];
+renderYN('optionQs',optQs,'o');
+function scoreOption(){
+  const a=getYN('o',optQs.length);
+  if(a.includes(null)){alert('Answer all questions');return}
+  const yes=a.filter(x=>x).length;
+  let txt='';
+  if(yes>=4) txt="You're dating. He's showing up consistently. Keep choosing yourself too — secure energy keeps it healthy.";
+  else if(yes>=2) txt="It's foggy. You're somewhere in between. Have a calm, direct conversation about where this is going.";
+  else txt="You're an option. He's enjoying the access without the commitment. You deserve to be a priority — start acting like one.";
+  const o=document.getElementById('optionOut');o.textContent=txt;o.style.display='block';
+}
+
+/* ---------- 6. BOUNDARY ---------- */
+const boundary={
+  late:`Hey — I get that things come up, but cancelling last minute doesn't work for me anymore. If we make a plan, I need to know I can count on it. Let's reschedule when you're sure.`,
+  latetext:`I've noticed you usually text me late at night. I'm not available for that anymore — I'd love to talk during the day if you're genuinely interested in getting to know me.`,
+  undefined:`I really like you, and I'm not interested in staying in something undefined. I need to know what we are. Take your time, but I won't keep showing up the same way without an answer.`,
+  rude:`When you brush off how I feel, it doesn't make the feeling go away — it just makes me trust you less. I need you to listen, even when you don't agree.`
+};
+function genBoundary(){
+  const v=document.getElementById('bScene').value;if(!v)return;
+  const o=document.getElementById('bOut');o.textContent=boundary[v];o.style.display='block';
+  document.getElementById('bCopy').style.display='inline-block';
+}
+
+/* ---------- 7. WALK AWAY ---------- */
+const walkItems=[
+  "I feel anxious more than I feel happy with him.",
+  "I'm always the one initiating contact or plans.",
+  "He's told me (in words or actions) he's not ready.",
+  "My friends are worried about how I'm being treated.",
+  "He's broken the same promise more than twice.",
+  "I've shrunk myself to keep him comfortable.",
+  "I feel lonelier with him than I do alone."
+];
+const wb=document.getElementById('walkQs');
+walkItems.forEach((q,i)=>{
+  wb.insertAdjacentHTML('beforeend',`<label class="check"><input type="checkbox" id="w${i}"> <span>${q}</span></label>`);
+});
+function scoreWalk(){
+  let n=0;walkItems.forEach((_,i)=>{if(document.getElementById('w'+i).checked)n++});
+  const o=document.getElementById('walkOut');
+  o.textContent = n<=2
+    ? `You checked ${n} boxes. 0–2 boxes = wait. There may still be something here, but stay alert and keep choosing yourself.`
+    : `You checked ${n} boxes. 3+ boxes = time to walk away. You already know. Trust yourself.`;
+  o.style.display='block';
+}
+
+/* ---------- 8. 7-DAY CHALLENGE ---------- */
+const days=[
+  "Day 1: Do one thing today purely for you — no posting, no telling him.",
+  "Day 2: Unfollow or mute one account that makes you feel less-than.",
+  "Day 3: Write down 5 things you love about your life right now.",
+  "Day 4: Make a plan with a friend and fully show up for it.",
+  "Day 5: Move your body for 20 minutes (walk counts).",
+  "Day 6: Don't check his profile or messages all day. Notice the urge, breathe through it.",
+  "Day 7: Write yourself a love letter from your future, secure self."
+];
+function renderDay(){
+  const d=parseInt(localStorage.getItem('ss_day')||'0');
+  const card=document.getElementById('dayCard');
+  if(d>=days.length){card.innerHTML=`<h3>You did it!</h3><p>7 days of choosing yourself. This is who you are now.</p>`}
+  else card.innerHTML=`<h3>Day ${d+1} of 7</h3><p>${days[d].replace(/^Day \d+: /,'')}</p>`;
+}
+function completeDay(){
+  let d=parseInt(localStorage.getItem('ss_day')||'0');
+  if(d<days.length){d++;localStorage.setItem('ss_day',d);renderDay()}
+}
+function resetChallenge(){localStorage.setItem('ss_day','0');renderDay()}
+renderDay();
+
+/* ---------- 9. ATTACHMENT ---------- */
+const attachQs=[
+  ["When he doesn't reply for hours, I…",["Spiral and check my phone constantly","Notice it, then go on with my day","Feel relieved I have space"]],
+  ["When things get serious, I tend to…",["Want even more closeness","Lean in calmly","Pull back or feel trapped"]],
+  ["If we have a conflict, I…",["Need reassurance immediately","Talk it through when we're calm","Avoid the conversation"]],
+  ["When he expresses feelings, I…",["Feel finally safe","Receive it openly","Get uncomfortable"]],
+  ["My biggest fear in dating is…",["Being abandoned","Choosing the wrong person","Losing my freedom"]],
+  ["When I'm single, I usually feel…",["Incomplete","Content and open","Honestly relieved"]]
+];
+const ab=document.getElementById('attachQs');
+attachQs.forEach((q,i)=>{
+  let html=`<div class="qbox"><p>${i+1}. ${q[0]}</p>`;
+  q[1].forEach((opt,j)=>{
+    html+=`<label style="display:block;margin:4px 0"><input type="radio" name="a${i}" value="${j}" style="accent-color:var(--btn)"> ${opt}</label>`;
+  });
+  html+=`</div>`;ab.insertAdjacentHTML('beforeend',html);
+});
+function scoreAttach(){
+  let counts=[0,0,0];
+  for(let i=0;i<attachQs.length;i++){
+    const v=document.querySelector(`input[name=a${i}]:checked`);
+    if(!v){alert('Answer all questions');return}
+    counts[+v.value]++;
+  }
+  const max=Math.max(...counts);
+  const idx=counts.indexOf(max);
+  const styles=[
+    ["Anxious","You crave closeness and fear abandonment. Your work: soothe yourself first, before reaching for him. Your worth isn't in his response time."],
+    ["Secure","You can love deeply and still hold yourself. Keep modeling this — and only stay where it's matched."],
+    ["Avoidant","You value independence and feel safer with distance. Your work: practice staying when things get close. Vulnerability is the doorway, not the trap."]
+  ];
+  const o=document.getElementById('attachOut');
+  o.textContent=`Your style: ${styles[idx][0]}\n\n${styles[idx][1]}`;
+  o.style.display='block';
+}
+
+/* ---------- 10. MINDSET CARDS ---------- */
+const cards=[
+  "I am not for everyone — and that is my power.",
+  "His silence is information, not punishment.",
+  "I don't chase. I attract. I choose.",
+  "Anxiety is not love. Calm is love.",
+  "I am the prize, the picker, and the peace.",
+  "Being chosen by someone wrong is not winning.",
+  "I am allowed to leave anything that costs me my peace.",
+  "My standards are not too high. They are mine.",
+  "I do not perform for love. I receive it.",
+  "Mixed signals are a clear answer: no.",
+  "I am building a life I don't need to escape from.",
+  "He doesn't have to be the one. I am the one for me first.",
+  "Closure is a gift I give myself.",
+  "I trust the version of me who knows.",
+  "I'd rather be lonely for a season than lonely beside him.",
+  "What's meant for me will not require me to shrink.",
+  "I don't need him to choose me. I already did.",
+  "Slow love is real love.",
+  "I move at the pace of my peace.",
+  "I am soft, secure, and not available for less."
+];
+function drawCard(){
+  const c=cards[Math.floor(Math.random()*cards.length)];
+  document.getElementById('mindCard').innerHTML=`<h3>Today's Card</h3><p style="font-size:1.2rem;font-style:italic">"${c}"</p>`;
+}
+
+/* ---------- 11. BREATHING ---------- */
+let breathOn=false,breathTimer=null;
+function toggleBreath(){
+  breathOn=!breathOn;
+  document.getElementById('breathBtn').textContent=breathOn?'Stop':'Start';
+  if(breathOn) breathCycle(); else stopBreath();
+}
+function stopBreath(){
+  clearTimeout(breathTimer);
+  const c=document.getElementById('breathCircle');
+  c.style.transition='transform 1s ease';c.style.transform='scale(1)';c.textContent='Ready';
+  document.getElementById('breathText').textContent='';
+}
+function breathCycle(){
+  const c=document.getElementById('breathCircle');
+  const t=document.getElementById('breathText');
+  const inhale=()=>{if(!breathOn)return;c.style.transition='transform 4s ease';c.style.transform='scale(1.5)';c.textContent='Inhale';t.textContent='Breathe in slowly through your nose...';breathTimer=setTimeout(hold,4000)};
+  const hold=()=>{if(!breathOn)return;c.textContent='Hold';t.textContent='Hold gently...';breathTimer=setTimeout(exhale,4000)};
+  const exhale=()=>{if(!breathOn)return;c.style.transition='transform 6s ease';c.style.transform='scale(1)';c.textContent='Exhale';t.textContent='Release through your mouth...';breathTimer=setTimeout(inhale,6000)};
+  inhale();
+}
+
+/* ---------- 12. SIMULATOR ---------- */
+const sims=[
+  {s:"He texts at 11pm: 'You up?'",opts:[
+    {t:"'Yes! Want to come over?' 🥺",sec:false,fb:"Anxious. You're available on his timing, not yours. You deserve daytime, intentional energy."},
+    {t:"Don't reply until tomorrow morning, then say 'Just saw this — was asleep. What's up?'",sec:true,fb:"Secure. You honored your time. He learns you're not on standby."},
+    {t:"'Why are you only texting me this late?'",sec:false,fb:"Reactive. Calm boundary > confrontation. State your standard, don't fight for it."}
+  ]},
+  {s:"He cancels date plans 1 hour before — third time.",opts:[
+    {t:"'No worries! Let me know when you're free.'",sec:false,fb:"Anxious-pleasing. You're teaching him there's no consequence."},
+    {t:"'Thanks for letting me know. I'm not going to keep rescheduling — let me know when you can commit to a plan.'",sec:true,fb:"Secure. Clear, calm, no anger needed. You stated your line."},
+    {t:"Don't reply at all.",sec:false,fb:"Avoidant. Silence creates more anxiety in you. Speak your truth, then step back."}
+  ]},
+  {s:"You've been seeing him 2 months. He hasn't called you his girlfriend.",opts:[
+    {t:"Bring it up casually: 'Hey, I want to know what we are. What are you looking for?'",sec:true,fb:"Secure. Direct without ultimatum. You deserve clarity."},
+    {t:"Wait it out and hope he says it.",sec:false,fb:"Anxious. Waiting steals your peace. Ask the question."},
+    {t:"Post thirst traps to make him jealous.",sec:false,fb:"Anxious-protest. Energy spent on him = energy stolen from you."}
+  ]},
+  {s:"He says: 'I'm not ready for a relationship right now.'",opts:[
+    {t:"'I appreciate you telling me. I am ready, so I'm going to step back.'",sec:true,fb:"Secure. You believed him the first time. That's power."},
+    {t:"'That's okay! We can keep things casual.'",sec:false,fb:"Anxious. You overrode your truth to keep him close."},
+    {t:"'Maybe you'll change your mind?'",sec:false,fb:"Anxious-bargaining. Take people at their word."}
+  ]},
+  {s:"You feel anxious because he hasn't replied in 6 hours.",opts:[
+    {t:"Send a follow-up to check.",sec:false,fb:"Anxious. The urge isn't an emergency. Wait and see."},
+    {t:"Put your phone face-down and do something nourishing.",sec:true,fb:"Secure. You soothed yourself. His reply doesn't determine your mood."},
+    {t:"Assume the worst and write him off in your head.",sec:false,fb:"Avoidant. Don't pre-reject to protect yourself. Stay open and grounded."}
+  ]}
+];
+let simIdx=0;
+function renderSim(){
+  const s=sims[simIdx];
+  let html=`<div class="qbox"><p>Scenario ${simIdx+1}: ${s.s}</p></div>`;
+  s.opts.forEach((o,i)=>{
+    html+=`<button class="ghost" style="display:block;width:100%;text-align:left;margin:8px 0" onclick="simAns(${i})">${o.t}</button>`;
+  });
+  html+=`<div id="simFb" class="result" style="display:none"></div>`;
+  document.getElementById('simBox').innerHTML=html;
+}
+function simAns(i){
+  const o=sims[simIdx].opts[i];
+  const fb=document.getElementById('simFb');
+  fb.textContent=(o.sec?"✓ Secure response. ":"✗ ")+o.fb;
+  fb.style.display='block';
+}
+function nextSim(){simIdx=(simIdx+1)%sims.length;renderSim()}
+renderSim();
+
+/* ---------- 13. 30 PROMPTS ---------- */
+const prompts=[
+  "What does feeling secure actually feel like in my body?",
+  "Where in my life am I performing for love?",
+  "What would I do today if I knew I was already enough?",
+  "Whose voice am I hearing when I doubt myself?",
+  "What is one boundary I've been afraid to set?",
+  "When did I last feel truly chosen — and by whom?",
+  "What story am I telling myself about why he hasn't called?",
+  "What does my younger self need to hear from me today?",
+  "Where am I confusing intensity with intimacy?",
+  "What am I tolerating that I would never recommend to a friend?",
+  "What would I do this week if I weren't waiting on him?",
+  "Who am I when no one is watching me be a partner?",
+  "What's one thing I love about being alone?",
+  "What red flag did I ignore — and what did I learn?",
+  "How do I want to feel in my next relationship?",
+  "What does 'choosing myself' look like in concrete actions?",
+  "What part of me still believes love has to hurt?",
+  "Whose approval am I unconsciously seeking?",
+  "What's a need I'm afraid to name out loud?",
+  "When I feel anxious, what does my body actually need?",
+  "What did love look like in my home growing up?",
+  "What would I let go of if I trusted I'd be okay?",
+  "What is my nervous system trying to protect me from?",
+  "Where am I being soft when I need to be firm?",
+  "Where am I being firm when I need to be soft?",
+  "What's a small win I haven't celebrated?",
+  "What would 'enough' feel like — and have I given myself permission to feel it?",
+  "What kind of partner do I want to BE?",
+  "What does forgiveness look like for me right now?",
+  "If I trusted myself fully, what would I do next?"
+];
+function dayOfMonth(){const d=new Date().getDate();return ((d-1)%30)+1}
+function renderPrompt(){
+  const day=dayOfMonth();
+  document.getElementById('promptCard').innerHTML=`<h3>Day ${day} of 30</h3><p style="font-size:1.1rem;font-style:italic">"${prompts[day-1]}"</p>`;
+}
+function savePrompt(){
+  const day=dayOfMonth();
+  localStorage.setItem('ss_prompt_'+day,document.getElementById('promptResp').value);
+  const m=document.getElementById('promptMsg');m.textContent='Saved to this device.';m.style.display='block';
+}
+function loadPrompt(){
+  const day=dayOfMonth();
+  const v=localStorage.getItem('ss_prompt_'+day)||'';
+  document.getElementById('promptResp').value=v;
+  const m=document.getElementById('promptMsg');m.textContent=v?'Loaded your saved response.':'No saved response yet for today.';m.style.display='block';
+}
+renderPrompt();
+
+/* ---------- HELPERS ---------- */
+function renderYN(targetId,questions,prefix){
+  const box=document.getElementById(targetId);
+  questions.forEach((q,i)=>{
+    box.insertAdjacentHTML('beforeend',
+      `<div class="qbox"><p>${i+1}. ${q}</p>
+        <div class="yn">
+          <button onclick="setYN('${prefix}',${i},1,this)">Yes</button>
+          <button onclick="setYN('${prefix}',${i},0,this)">No</button>
+        </div></div>`);
+  });
+}
+const ynState={};
+function setYN(p,i,v,btn){
+  ynState[p+i]=v;
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+function getYN(p,n){const a=[];for(let i=0;i<n;i++)a.push(ynState[p+i]??null);return a}
+
+function copyText(id,btn){
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{
+    const o=btn.textContent;btn.textContent='Copied!';setTimeout(()=>btn.textContent=o,1500);
+  });
+}
+</script>
+</body>
+</html>
