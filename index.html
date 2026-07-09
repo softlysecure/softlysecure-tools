@@ -17,8 +17,8 @@
     --header:    #F7D6E0;
     --btn:       #C86B85;
     --btn-hover: #b05a73;
-    --text:      #4A4A4A;
-    --accent:    #A3B5A6;
+    --text:      #2E2E2E;
+    --accent:    #6b8f6e;
     --card:      #ffffff;
     --soft-pink: #fce8ee;
     --border:    #f0d8e0;
@@ -35,8 +35,8 @@
     background: var(--bg);
     color: var(--text);
     font-family: 'Lato', sans-serif;
-    font-size: 16px;
-    line-height: 1.65;
+    font-size: 17px;
+    line-height: 1.7;
   }
 
   h1, h2, h3 {
@@ -65,7 +65,7 @@
   header.site p {
     font-family: 'Lato', sans-serif;
     font-size: 0.88rem;
-    color: var(--accent);
+    color: #7a4a5a;
     margin: 0;
     font-style: italic;
   }
@@ -187,7 +187,7 @@
     margin: 10px 0 4px;
     font-weight: 700;
     font-size: 0.88rem;
-    color: #7a6a72;
+    color: #4a3a42;
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
@@ -201,7 +201,7 @@
     white-space: pre-wrap;
     font-size: 0.92rem;
     line-height: 1.7;
-    color: #6a4a5a;
+    color: #3a2030;
     font-style: italic;
   }
 
@@ -254,10 +254,40 @@
     border: 1.5px solid var(--border);
   }
 
+  .next-tool {
+    margin-top: 20px;
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+    color: var(--accent);
+    text-align: center;
+    font-style: italic;
+  }
+  .next-tool span {
+    color: var(--btn);
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+    font-style: normal;
+  }
+
+  .timer-phrase {
+    text-align: center;
+    font-style: italic;
+    color: #3a2030;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 8px 0 4px;
+    min-height: 1.4em;
+    transition: opacity 0.5s;
+  }
+
   footer {
     text-align: center;
     padding: 28px 20px;
-    color: #b0a0a8;
+    color: #7a6a72;
     font-size: 0.82rem;
     font-family: 'Lato', sans-serif;
     border-top: 1px solid var(--border);
@@ -285,19 +315,25 @@
 <nav class="menu" id="menu"></nav>
 
 <main id="main">
+
+  <!-- TOOL 1: TIMER -->
   <section class="tool" id="t-timer">
     <h2>10-Minute Rule Timer</h2>
-    <p>Feel the urge to text? Wait 10 minutes. You're rewiring your nervous system.</p>
+    <p>Feel the urge to text? Wait 10 minutes. You're rewiring your nervous system — one pause at a time.</p>
+    <div class="timer-phrase" id="timerPhrase">Every minute you wait is your nervous system finding its ground.</div>
     <div class="timer" id="timerDisplay">10:00</div>
     <div class="row" style="justify-content:center; display:flex; gap:10px;">
       <button class="primary" onclick="startTimer()">Start</button>
       <button class="ghost" onclick="resetTimer()">Reset</button>
     </div>
     <div id="timerMsg" class="result" style="display:none"></div>
+    <div class="next-tool">Still not sure what to say? Try the <span onclick="goTo('t-text')">Texting Script Generator</span> next.</div>
   </section>
 
+  <!-- TOOL 2: TEXTING SCRIPTS -->
   <section class="tool" id="t-text">
     <h2>Texting Script Generator</h2>
+    <p>There are no wrong words here. We'll help you find the right ones.</p>
     <label>Select your situation:</label>
     <select id="textSit">
       <option value="">— choose —</option>
@@ -307,25 +343,35 @@
     </select>
     <button class="primary" onclick="genText()">Generate Script</button>
     <div id="textOut" class="result" style="display:none"></div>
-    <button class="btn copy-btn" id="textCopy" style="display:none" onclick="copyText('textOut',this)">Copy</button>
+    <div id="textNote" class="result" style="display:none;margin-top:8px;background:#f0f7f1;border-left-color:var(--accent)"></div>
+    <button class="btn copy-btn" id="textCopy" style="display:none;margin-top:10px" onclick="copyText('textOut',this)">Copy Script</button>
+    <div class="next-tool">Not sure where things stand? Try <span onclick="goTo('t-ghost')">Is He Busy or Ghosting?</span> next.</div>
   </section>
 
+  <!-- TOOL 3: GHOSTING -->
   <section class="tool" id="t-ghost">
     <h2>Is He Busy or Ghosting?</h2>
+    <p>The not-knowing is the hardest part. Let's get you some clarity.</p>
     <div id="ghostQs"></div>
     <button class="primary" onclick="scoreGhost()">See result</button>
     <div id="ghostOut" class="result" style="display:none"></div>
+    <div class="next-tool">Need to know where you stand officially? Try <span onclick="goTo('t-option')">Are We Dating or Am I an Option?</span> next.</div>
   </section>
 
+  <!-- TOOL 4: OPTION -->
   <section class="tool" id="t-option">
     <h2>Are We Dating or Am I an Option?</h2>
+    <p>Honest answers only. You already know more than you think.</p>
     <div id="optionQs"></div>
     <button class="primary" onclick="scoreOption()">See result</button>
     <div id="optionOut" class="result" style="display:none"></div>
+    <div class="next-tool">Ready to say something? Try the <span onclick="goTo('t-boundary')">Boundary Script Builder</span> next.</div>
   </section>
 
+  <!-- TOOL 5: BOUNDARY -->
   <section class="tool" id="t-boundary">
     <h2>Boundary Script Builder</h2>
+    <p>You're not starting a fight. You're starting a conversation — from a place of self-respect.</p>
     <label>Select scenario:</label>
     <select id="bScene">
       <option value="">— choose —</option>
@@ -336,62 +382,87 @@
     </select>
     <button class="primary" onclick="genBoundary()">Generate Script</button>
     <div id="bOut" class="result" style="display:none"></div>
-    <button class="btn copy-btn" id="bCopy" style="display:none" onclick="copyText('bOut',this)">Copy</button>
+    <div id="bNote" class="result" style="display:none;margin-top:8px;background:#f0f7f1;border-left-color:var(--accent)"></div>
+    <button class="btn copy-btn" id="bCopy" style="display:none;margin-top:10px" onclick="copyText('bOut',this)">Copy Script</button>
+    <div class="next-tool">Wondering if this relationship is still worth it? Try the <span onclick="goTo('t-walk')">When to Walk Away Checklist</span> next.</div>
   </section>
 
+  <!-- TOOL 6: WALK AWAY -->
   <section class="tool" id="t-walk">
     <h2>When to Walk Away Checklist</h2>
+    <p>This isn't about him. It's about you — and what you deserve. Answer honestly. No one is watching.</p>
     <div id="walkQs"></div>
     <button class="primary" onclick="scoreWalk()">Get my score</button>
     <div id="walkOut" class="result" style="display:none"></div>
+    <div class="next-tool">Start choosing yourself actively. Try the <span onclick="goTo('t-challenge')">7-Day Choose Yourself Challenge</span> next.</div>
   </section>
 
+  <!-- TOOL 7: CHALLENGE -->
   <section class="tool" id="t-challenge">
     <h2>7-Day Choose Yourself Challenge</h2>
+    <p>Seven days. Seven small, powerful choices. You don't have to overhaul your life — just show up for yourself once a day.</p>
     <div class="day-card" id="dayCard"></div>
+    <div id="challengeMsg" class="result" style="display:none"></div>
     <div class="row" style="justify-content:center; display:flex; gap:10px; margin-top:10px;">
       <button class="primary" onclick="completeDay()">Complete Today's Task</button>
       <button class="ghost" onclick="resetChallenge()">Restart</button>
     </div>
+    <div class="next-tool">Want to understand the deeper pattern? Try the <span onclick="goTo('t-attach')">Attachment Style Assessment</span> next.</div>
   </section>
 
+  <!-- TOOL 8: ATTACHMENT -->
   <section class="tool" id="t-attach">
     <h2>Attachment Style Assessment</h2>
+    <p>Understanding your pattern is not about labelling yourself. It's about finally making sense of something that has confused you for years.</p>
     <div id="attachQs"></div>
     <button class="primary" onclick="scoreAttach()">Reveal my style</button>
     <div id="attachOut" class="result" style="display:none"></div>
+    <div class="next-tool">Ground yourself daily with the <span onclick="goTo('t-mindset')">Secure Woman Mindset Card</span> next.</div>
   </section>
 
+  <!-- TOOL 9: MINDSET CARD -->
   <section class="tool" id="t-mindset">
     <h2>Secure Woman Mindset Card</h2>
-    <p>Pull a card. Read it twice. Carry it with you today.</p>
+    <p>Pull a card. Read it twice. Let it land.</p>
     <div class="day-card" id="mindCard"><h3>Tap below to draw your card</h3></div>
     <div class="row" style="justify-content:center; display:flex;">
       <button class="primary" onclick="drawCard()">New Card</button>
     </div>
+    <div id="mindMsg" class="result" style="display:none"></div>
+    <div class="next-tool">Feeling activated right now? The <span onclick="goTo('t-breath')">Self-Soothing Breathing Tool</span> is always here.</div>
   </section>
 
+  <!-- TOOL 10: BREATHING -->
   <section class="tool" id="t-breath">
     <h2>Self-Soothing Breathing Tool</h2>
-    <p>Inhale 4 · Hold 4 · Exhale 6. Repeat as needed.</p>
+    <p>You don't have to feel calm to start. You just have to start. Your body knows how to find calm — let's help it remember.</p>
+    <p style="font-size:0.88rem;color:var(--accent);text-align:center;margin-top:0">Inhale 4 · Hold 4 · Exhale 6. Repeat as needed.</p>
     <div class="breath-wrap">
       <div class="breath" id="breathCircle">Ready</div>
     </div>
+    <div id="breathPhrase" class="timer-phrase" style="display:none"></div>
     <div class="row" style="justify-content:center; display:flex;">
       <button class="primary" id="breathBtn" onclick="toggleBreath()">Start</button>
     </div>
+    <div id="breathMsg" class="result" style="display:none"></div>
+    <div class="next-tool">Ready to practise responding securely? Try the <span onclick="goTo('t-sim')">Dating Scenario Simulator</span> next.</div>
   </section>
 
+  <!-- TOOL 11: SIMULATOR -->
   <section class="tool" id="t-sim">
     <h2>Dating Scenario Simulator</h2>
+    <p>This is a safe space to practise. No real consequences — just new patterns. Choose the response that feels most like the woman you're becoming.</p>
     <div id="simBox"></div>
     <div class="row" style="justify-content:center; margin-top:14px;">
       <button class="ghost" onclick="nextSim()">Next Scenario</button>
     </div>
+    <div class="next-tool">Reflect on what came up. Try <span onclick="goTo('t-prompts')">30 Days of Prompts</span> next.</div>
   </section>
 
+  <!-- TOOL 12: PROMPTS -->
   <section class="tool" id="t-prompts">
     <h2>30 Days of Prompts</h2>
+    <p>Thirty days. Thirty moments of honest self-reflection. You don't need to write perfectly — just write honestly.</p>
     <div class="day-card" id="promptCard"></div>
     <label>Your response:</label>
     <textarea id="promptResp" placeholder="Write freely..."></textarea>
@@ -400,7 +471,9 @@
       <button class="ghost" onclick="loadPrompt()">Load Saved</button>
     </div>
     <div id="promptMsg" class="result" style="display:none"></div>
+    <div class="next-tool">Need to calm down first? The <span onclick="goTo('t-breath')">Self-Soothing Breathing Tool</span> is always here.</div>
   </section>
+
 </main>
 
 <footer>© 2026 Softly Secure</footer>
@@ -435,38 +508,75 @@ function show(id,btn){
   btn.classList.add('active');
   window.scrollTo({top:document.querySelector('nav').offsetTop,behavior:'smooth'});
 }
+function goTo(id){
+  const btn=[...document.querySelectorAll('#menu button')].find(b=>b.onclick.toString().includes(id));
+  if(btn) btn.click();
+}
 
-let timerInt=null,timeLeft=600;
+// ── TIMER ──
+const timerPhrases=[
+  "Every minute you wait is your nervous system finding its ground.",
+  "You don't have to decide anything yet. Just breathe.",
+  "Clarity comes after calm. You're almost there.",
+  "Waiting is not weakness. It is wisdom.",
+  "The urge to text will pass. You are stronger than the spiral.",
+  "You are not waiting for him. You are choosing yourself.",
+  "You're doing better than you think."
+];
+let timerInt=null,timeLeft=600,phraseIdx=0,phraseInt=null;
 function fmt(s){return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
+function rotatePhrases(){
+  const el=document.getElementById('timerPhrase');
+  el.style.opacity=0;
+  setTimeout(()=>{
+    phraseIdx=(phraseIdx+1)%timerPhrases.length;
+    el.textContent=timerPhrases[phraseIdx];
+    el.style.opacity=1;
+  },500);
+}
 function startTimer(){
   if(timerInt) return;
   document.getElementById('timerMsg').style.display='none';
+  phraseInt=setInterval(rotatePhrases,12000);
   timerInt=setInterval(()=>{
     timeLeft--;
     document.getElementById('timerDisplay').textContent=fmt(timeLeft);
     if(timeLeft<=0){
       clearInterval(timerInt);timerInt=null;
+      clearInterval(phraseInt);phraseInt=null;
       const m=document.getElementById('timerMsg');
-      m.textContent="You did it! This is rewiring.";
+      m.textContent="You made it. 10 minutes of choosing yourself over the spiral. 🌿\n\nHow do you feel right now — calmer? Clearer? That's your nervous system resetting.\n\nYou don't have to text. But if you do, do it from here — not from panic.";
       m.style.display='block';
     }
   },1000);
 }
-function resetTimer(){clearInterval(timerInt);timerInt=null;timeLeft=600;document.getElementById('timerDisplay').textContent='10:00';document.getElementById('timerMsg').style.display='none'}
+function resetTimer(){
+  clearInterval(timerInt);timerInt=null;
+  clearInterval(phraseInt);phraseInt=null;
+  timeLeft=600;
+  phraseIdx=0;
+  document.getElementById('timerDisplay').textContent='10:00';
+  document.getElementById('timerPhrase').textContent=timerPhrases[0];
+  document.getElementById('timerMsg').style.display='none';
+}
 
+// ── TEXTING SCRIPTS ──
 const textScripts={
-  noreply:`Hey — I noticed I haven't heard back. No pressure either way; just wanted to check in once and then I'll leave the ball in your court. Hope you're well.`,
-  clarity:`Hey, I've been thinking about us and I want to be honest. I really like spending time with you, and I'd love to know where you see this going. No need to answer right now — but I'd rather know than guess.`,
-  askout:`Hey! I'd love to take you out properly this week — Thursday or Saturday evening? I had a place in mind I think you'd enjoy.`
+  noreply:{script:`Hey — I noticed I haven't heard back. No pressure either way; just wanted to check in once and then I'll leave the ball in your court. Hope you're well.`,note:"Before you send — ask yourself: am I texting from calm, or from anxiety? If it's calm, send it. If it's anxiety, wait 10 more minutes."},
+  clarity:{script:`Hey, I've been thinking about us and I want to be honest. I really like spending time with you, and I'd love to know where you see this going. No need to answer right now — but I'd rather know than guess.`,note:"Asking for clarity is not desperate. It is self-respecting. A secure woman knows what she wants and asks for it — gently and directly."},
+  askout:{script:`Hey! I'd love to take you out properly this week — Thursday or Saturday evening? I had a place in mind I think you'd enjoy.`,note:"Going first takes courage. Whatever his answer is, you will be okay. You asked. That means you chose yourself."}
 };
 function genText(){
   const v=document.getElementById('textSit').value;
   if(!v) return;
   const o=document.getElementById('textOut');
-  o.textContent=textScripts[v];o.style.display='block';
+  o.textContent=textScripts[v].script;o.style.display='block';
+  const n=document.getElementById('textNote');
+  n.textContent=textScripts[v].note;n.style.display='block';
   document.getElementById('textCopy').style.display='inline-block';
 }
 
+// ── GHOSTING ──
 const ghostQs=[
   "Has he initiated contact at least once in the last 5 days?",
   "Did his last reply feel warm and engaged (not one-word)?",
@@ -478,12 +588,13 @@ function scoreGhost(){
   if(a.includes(null)){alert('Answer all questions');return}
   const yes=a.filter(x=>x).length;
   let txt='';
-  if(yes>=2) txt="He's busy. Stay grounded — don't chase. Reach out once warmly, then return to your life.";
-  else if(yes===0) txt="He's ghosting. Don't double-text. His silence is your answer. Block, mute, or move on with grace.";
-  else txt="Not sure yet. Give it 7 more days with no extra effort from you. His actions will reveal the truth.";
+  if(yes>=2) txt="He's probably busy. 🌿\n\nStay grounded — don't chase. Reach out once warmly, then return to your life. His response will tell you everything.\n\nYou came here for clarity. That took courage. Whatever the answer, you are not at the mercy of his choices.";
+  else if(yes===0) txt="This looks like ghosting.\n\nDon't double-text. His silence is information, not punishment. Block, mute, or move on with grace.\n\nYou came here for clarity. That took courage. Whatever the answer, you are not at the mercy of his choices.";
+  else txt="Not clear yet.\n\nGive it 7 more days with no extra effort from your side. His actions will reveal the truth — they always do.\n\nYou came here for clarity. That took courage. Whatever the answer, you are not at the mercy of his choices.";
   const o=document.getElementById('ghostOut');o.textContent=txt;o.style.display='block';
 }
 
+// ── OPTION ──
 const optQs=[
   "Does he plan dates in advance (not last-minute)?",
   "Have you met people in his life (friends/family)?",
@@ -497,24 +608,27 @@ function scoreOption(){
   if(a.includes(null)){alert('Answer all questions');return}
   const yes=a.filter(x=>x).length;
   let txt='';
-  if(yes>=4) txt="You're dating. He's showing up consistently. Keep choosing yourself too — secure energy keeps it healthy.";
-  else if(yes>=2) txt="It's foggy. You're somewhere in between. Have a calm, direct conversation about where this is going.";
-  else txt="You're an option. He's enjoying the access without the commitment. You deserve to be a priority — start acting like one.";
+  if(yes>=4) txt="You're dating. 🌿\n\nHe's showing up consistently. Keep choosing yourself too — secure energy keeps it healthy.\n\nYou saw it clearly. That's the first step. Whatever you do next — do it from self-respect, not from fear of being alone.";
+  else if(yes>=2) txt="It's foggy.\n\nYou're somewhere in between. Mixed signals are their own kind of answer — a man who is clear about wanting you is clear. Have a calm, direct conversation about where this is going.\n\nYou saw it clearly. That's the first step. Whatever you do next — do it from self-respect, not from fear of being alone.";
+  else txt="You may be an option.\n\nThis is not a reflection of your worth. It is information. The woman who knows her value doesn't wait to be chosen. She does the choosing.\n\nYou saw it clearly. That's the first step. Whatever you do next — do it from self-respect, not from fear of being alone.";
   const o=document.getElementById('optionOut');o.textContent=txt;o.style.display='block';
 }
 
+// ── BOUNDARY ──
 const boundary={
-  late:`Hey — I get that things come up, but cancelling last minute doesn't work for me anymore. If we make a plan, I need to know I can count on it. Let's reschedule when you're sure.`,
-  latetext:`I've noticed you usually text me late at night. I'm not available for that anymore — I'd love to talk during the day if you're genuinely interested in getting to know me.`,
-  undefined:`I really like you, and I'm not interested in staying in something undefined. I need to know what we are. Take your time, but I won't keep showing up the same way without an answer.`,
-  rude:`When you brush off how I feel, it doesn't make the feeling go away — it just makes me trust you less. I need you to listen, even when you don't agree.`
+  late:{script:`Hey — I get that things come up, but cancelling last minute doesn't work for me anymore. If we make a plan, I need to know I can count on it. Let's reschedule when you're sure.`,note:"Saying something about this is not needy. It's necessary."},
+  latetext:{script:`I've noticed you usually text me late at night. I'm not available for that anymore — I'd love to talk during the day if you're genuinely interested in getting to know me.`,note:"Your time has value. This script helps him understand that — without an argument."},
+  undefined:{script:`I really like you, and I'm not interested in staying in something undefined. I need to know what we are. Take your time, but I won't keep showing up the same way without an answer.`,note:"You deserve to know where you stand. This conversation is long overdue."},
+  rude:{script:`When you brush off how I feel, it doesn't make the feeling go away — it just makes me trust you less. I need you to listen, even when you don't agree.`,note:"Your feelings are valid. All of them. This script helps you say that without shrinking."}
 };
 function genBoundary(){
   const v=document.getElementById('bScene').value;if(!v)return;
-  const o=document.getElementById('bOut');o.textContent=boundary[v];o.style.display='block';
+  const o=document.getElementById('bOut');o.textContent=boundary[v].script;o.style.display='block';
+  const n=document.getElementById('bNote');n.textContent=boundary[v].note;n.style.display='block';
   document.getElementById('bCopy').style.display='inline-block';
 }
 
+// ── WALK AWAY ──
 const walkItems=[
   "I feel anxious more than I feel happy with him.",
   "I'm always the one initiating contact or plans.",
@@ -531,34 +645,53 @@ walkItems.forEach((q,i)=>{
 function scoreWalk(){
   let n=0;walkItems.forEach((_,i)=>{if(document.getElementById('w'+i).checked)n++});
   const o=document.getElementById('walkOut');
-  o.textContent = n<=2
-    ? `You checked ${n} boxes. 0–2 boxes = wait. There may still be something here, but stay alert and keep choosing yourself.`
-    : `You checked ${n} boxes. 3+ boxes = time to walk away. You already know. Trust yourself.`;
-  o.style.display='block';
+  let txt='';
+  if(n<=2) txt=`You checked ${n} box${n===1?'':'es'}. There may still be something here worth investing in — but stay alert and keep choosing yourself.\n\nYou faced it. That takes more strength than staying stuck does. Whatever you decide — decide from self-respect, not from fear of being alone.`;
+  else txt=`You checked ${n} boxes. You already know. Trust yourself.\n\nWalking away from something that doesn't serve you is not failure. It is finally choosing yourself. 🌿\n\nYou faced it. That takes more strength than staying stuck does.`;
+  o.textContent=txt;o.style.display='block';
 }
 
+// ── CHALLENGE ──
 const days=[
-  "Day 1: Do one thing today purely for you — no posting, no telling him.",
-  "Day 2: Unfollow or mute one account that makes you feel less-than.",
-  "Day 3: Write down 5 things you love about your life right now.",
-  "Day 4: Make a plan with a friend and fully show up for it.",
-  "Day 5: Move your body for 20 minutes (walk counts).",
-  "Day 6: Don't check his profile or messages all day. Notice the urge, breathe through it.",
-  "Day 7: Write yourself a love letter from your future, secure self."
+  "Do one thing today purely for you — no posting, no telling him.",
+  "Unfollow or mute one account that makes you feel less-than.",
+  "Write down 5 things you love about your life right now.",
+  "Make a plan with a friend and fully show up for it.",
+  "Move your body for 20 minutes. A walk counts.",
+  "Don't check his profile or messages all day. Notice the urge, breathe through it.",
+  "Write yourself a love letter from your future, secure self."
+];
+const challengeMsgs=[
+  "Day one done. You showed up. That's everything. 🌿",
+  "Two days in. Your nervous system is starting to notice.",
+  "Three days of choosing yourself. This is what healing looks like.",
+  "Halfway there. Do you feel even slightly different? That's not coincidence.",
+  "Five days. You're building a new pattern — one choice at a time.",
+  "One more day. Tomorrow you finish what you started.",
+  "Seven days. You chose yourself every single day this week. 🌿\n\nThis is who you're becoming. Don't stop here."
 ];
 function renderDay(){
   const d=parseInt(localStorage.getItem('ss_day')||'0');
   const card=document.getElementById('dayCard');
-  if(d>=days.length){card.innerHTML=`<h3>You did it!</h3><p>7 days of choosing yourself. This is who you are now.</p>`}
-  else card.innerHTML=`<h3>Day ${d+1} of 7</h3><p>${days[d].replace(/^Day \d+: /,'')}</p>`;
+  const msg=document.getElementById('challengeMsg');
+  msg.style.display='none';
+  if(d>=days.length){card.innerHTML=`<h3>You did it! 🌿</h3><p>7 days of choosing yourself. You showed up every single day. This is who you are now.</p>`}
+  else card.innerHTML=`<h3>Day ${d+1} of 7</h3><p>${days[d]}</p>`;
 }
 function completeDay(){
   let d=parseInt(localStorage.getItem('ss_day')||'0');
-  if(d<days.length){d++;localStorage.setItem('ss_day',d);renderDay()}
+  if(d<days.length){
+    const msg=document.getElementById('challengeMsg');
+    msg.textContent=challengeMsgs[d];
+    msg.style.display='block';
+    d++;localStorage.setItem('ss_day',d);
+    setTimeout(renderDay,2000);
+  }
 }
 function resetChallenge(){localStorage.setItem('ss_day','0');renderDay()}
 renderDay();
 
+// ── ATTACHMENT ──
 const attachQs=[
   ["When he doesn't reply for hours, I…",["Spiral and check my phone constantly","Notice it, then go on with my day","Feel relieved I have space"]],
   ["When things get serious, I tend to…",["Want even more closeness","Lean in calmly","Pull back or feel trapped"]],
@@ -585,15 +718,16 @@ function scoreAttach(){
   const max=Math.max(...counts);
   const idx=counts.indexOf(max);
   const styles=[
-    ["Anxious","You crave closeness and fear abandonment. Your work: soothe yourself first, before reaching for him. Your worth isn't in his response time."],
-    ["Secure","You can love deeply and still hold yourself. Keep modeling this — and only stay where it's matched."],
-    ["Avoidant","You value independence and feel safer with distance. Your work: practice staying when things get close. Vulnerability is the doorway, not the trap."]
+    ["Anxious","You crave closeness and fear abandonment. Anxious attachment is not a flaw — it is a learned response. And what is learned can be unlearned.\n\nYour work: soothe yourself first, before reaching for him. Your worth is not in his response time.\n\nYou know yourself a little better now. 🌿 That knowledge is the beginning of every good relationship — starting with the one you have with yourself."],
+    ["Secure","You can love deeply and still hold yourself. Keep modelling this — and only stay where it's matched.\n\nYou show more secure patterns than you may have realised. Keep noticing what feels safe and what doesn't. That awareness is your compass. 🌿"],
+    ["Avoidant","You value independence and feel safer with distance. Your work: practise staying when things get close. Vulnerability is the doorway, not the trap.\n\nYou know yourself a little better now. 🌿 That knowledge is the beginning of every good relationship — starting with the one you have with yourself."]
   ];
   const o=document.getElementById('attachOut');
   o.textContent=`Your style: ${styles[idx][0]}\n\n${styles[idx][1]}`;
   o.style.display='block';
 }
 
+// ── MINDSET CARD ──
 const cards=[
   "I am not for everyone — and that is my power.",
   "His silence is information, not punishment.",
@@ -614,18 +748,45 @@ const cards=[
   "I don't need him to choose me. I already did.",
   "Slow love is real love.",
   "I move at the pace of my peace.",
-  "I am soft, secure, and not available for less."
+  "I am soft, secure, and not available for less.",
+  "A secure woman trusts herself even when she doubts him.",
+  "You can love someone and still choose to walk away.",
+  "Secure love feels like safety — not like winning.",
+  "The right person will not make you question if you are enough.",
+  "Choosing yourself is not selfish. It is essential."
 ];
 function drawCard(){
   const c=cards[Math.floor(Math.random()*cards.length)];
   document.getElementById('mindCard').innerHTML=`<h3>Today's Card</h3><p style="font-size:1.15rem;font-style:italic">"${c}"</p>`;
+  const m=document.getElementById('mindMsg');
+  m.textContent="Read it twice. The second time, say it like you mean it. Carry it with you today. 🌿";
+  m.style.display='block';
 }
 
-let breathOn=false,breathTimer=null;
+// ── BREATHING ──
+const breathPhrases=[
+  "Inhale safety. Exhale the spiral.",
+  "You are here. You are okay. You are enough.",
+  "Nothing needs to be decided right now.",
+  "Let your body lead. Your mind will follow.",
+  "You are not in danger. You are healing."
+];
+let breathOn=false,breathTimer=null,breathPhraseIdx=0;
 function toggleBreath(){
   breathOn=!breathOn;
   document.getElementById('breathBtn').textContent=breathOn?'Stop':'Start';
-  if(breathOn) breathCycle(); else stopBreath();
+  const ph=document.getElementById('breathPhrase');
+  const bm=document.getElementById('breathMsg');
+  if(breathOn){
+    ph.style.display='block';
+    bm.style.display='none';
+    breathCycle();
+  } else {
+    stopBreath();
+    ph.style.display='none';
+    bm.textContent="You just gave your nervous system something it needed. 🌿\n\nThat anxious feeling? It's already a little quieter. Come back here whenever the spiral starts. This is always available to you.";
+    bm.style.display='block';
+  }
 }
 function stopBreath(){
   clearTimeout(breathTimer);
@@ -634,16 +795,22 @@ function stopBreath(){
 }
 function breathCycle(){
   const c=document.getElementById('breathCircle');
-  const inhale=()=>{if(!breathOn)return;c.style.transition='transform 4s ease';c.style.transform='scale(1.5)';c.textContent='Inhale';breathTimer=setTimeout(hold,4000)};
+  const ph=document.getElementById('breathPhrase');
+  const showPhrase=()=>{
+    ph.textContent=breathPhrases[breathPhraseIdx%breathPhrases.length];
+    breathPhraseIdx++;
+  };
+  const inhale=()=>{if(!breathOn)return;c.style.transition='transform 4s ease';c.style.transform='scale(1.5)';c.textContent='Inhale';showPhrase();breathTimer=setTimeout(hold,4000)};
   const hold=()=>{if(!breathOn)return;c.textContent='Hold';breathTimer=setTimeout(exhale,4000)};
   const exhale=()=>{if(!breathOn)return;c.style.transition='transform 6s ease';c.style.transform='scale(1)';c.textContent='Exhale';breathTimer=setTimeout(inhale,6000)};
   inhale();
 }
 
+// ── SIMULATOR ──
 const sims=[
   {s:"He texts at 11pm: 'You up?'",opts:[
     {t:"'Yes! Want to come over?' 🥺",sec:false,fb:"Anxious. You're available on his timing, not yours. You deserve daytime, intentional energy."},
-    {t:"Don't reply until tomorrow morning, then say 'Just saw this — was asleep. What's up?'",sec:true,fb:"Secure. You honored your time. He learns you're not on standby."},
+    {t:"Don't reply until tomorrow morning, then say 'Just saw this — was asleep. What's up?'",sec:true,fb:"Secure. You honoured your time. He learns you're not on standby."},
     {t:"'Why are you only texting me this late?'",sec:false,fb:"Reactive. Calm boundary > confrontation. State your standard, don't fight for it."}
   ]},
   {s:"He cancels date plans 1 hour before — third time.",opts:[
@@ -652,7 +819,7 @@ const sims=[
     {t:"Don't reply at all.",sec:false,fb:"Avoidant. Silence creates more anxiety in you. Speak your truth, then step back."}
   ]},
   {s:"You've been seeing him 2 months. He hasn't called you his girlfriend.",opts:[
-    {t:"Bring it up casually: 'Hey, I want to know what we are. What are you looking for?'",sec:true,fb:"Secure. Direct without ultimatum. You deserve clarity."},
+    {t:"Bring it up calmly: 'Hey, I want to know what we are. What are you looking for?'",sec:true,fb:"Secure. Direct without ultimatum. You deserve clarity."},
     {t:"Wait it out and hope he says it.",sec:false,fb:"Anxious. Waiting steals your peace. Ask the question."},
     {t:"Post thirst traps to make him jealous.",sec:false,fb:"Anxious-protest. Energy spent on him = energy stolen from you."}
   ]},
@@ -663,16 +830,16 @@ const sims=[
   ]},
   {s:"You feel anxious because he hasn't replied in 6 hours.",opts:[
     {t:"Send a follow-up to check.",sec:false,fb:"Anxious. The urge isn't an emergency. Wait and see."},
-    {t:"Put your phone face-down and do something nourishing.",sec:true,fb:"Secure. You soothed yourself. His reply doesn't determine your mood."},
+    {t:"Put your phone face-down and do something nourishing.",sec:true,fb:"Secure. You soothed yourself. His reply doesn't determine your mood. 🌿"},
     {t:"Assume the worst and write him off in your head.",sec:false,fb:"Avoidant. Don't pre-reject to protect yourself. Stay open and grounded."}
   ]}
 ];
 let simIdx=0;
 function renderSim(){
   const s=sims[simIdx];
-  let html=`<div class="qbox"><p>Scenario ${simIdx+1}: ${s.s}</p></div>`;
+  let html=`<div class="qbox"><p><strong>Scenario ${simIdx+1} of ${sims.length}:</strong> ${s.s}</p></div>`;
   s.opts.forEach((o,i)=>{
-    html+=`<button class="ghost" style="display:block;width:100%;text-align:left;margin:8px 0" onclick="simAns(${i})">${o.t}</button>`;
+    html+=`<button class="ghost" style="display:block;width:100%;text-align:left;margin:8px 0;white-space:normal" onclick="simAns(${i})">${o.t}</button>`;
   });
   html+=`<div id="simFb" class="result" style="display:none"></div>`;
   document.getElementById('simBox').innerHTML=html;
@@ -680,12 +847,15 @@ function renderSim(){
 function simAns(i){
   const o=sims[simIdx].opts[i];
   const fb=document.getElementById('simFb');
-  fb.textContent=(o.sec?"✓ Secure response. ":"✗ ")+o.fb;
+  const prefix=o.sec?"✓ Secure response. ":"✗ ";
+  const suffix=o.sec?"\n\nThat response is grounded, not reactive. Notice how it felt — calm, not desperate. That feeling is available to you in real situations too.":"";
+  fb.textContent=prefix+o.fb+suffix;
   fb.style.display='block';
 }
 function nextSim(){simIdx=(simIdx+1)%sims.length;renderSim()}
 renderSim();
 
+// ── PROMPTS ──
 const prompts=[
   "What does feeling secure actually feel like in my body?",
   "Where in my life am I performing for love?",
@@ -699,4 +869,77 @@ const prompts=[
   "What am I tolerating that I would never recommend to a friend?",
   "What would I do this week if I weren't waiting on him?",
   "Who am I when no one is watching me be a partner?",
-  "What's one thing
+  "What's one thing I keep almost saying to him — but don't?",
+  "Where do I feel most like myself?",
+  "What kind of love do I actually want?",
+  "What would I tell my best friend if she was in my situation?",
+  "When did I last choose myself without guilt?",
+  "What does a secure relationship look like to me — specifically?",
+  "What feeling am I trying to avoid by staying?",
+  "What am I afraid I'll find out if I slow down?",
+  "What part of me believed I had to earn love?",
+  "How do I feel in my body when I'm around him?",
+  "What would I do differently if I weren't afraid of being alone?",
+  "What has he shown me — not told me — about how he feels?",
+  "What version of myself do I want to call back in?",
+  "What boundary, if I held it, would change everything?",
+  "Where have I been more loyal to him than to myself?",
+  "What would I do if I knew he wasn't coming back?",
+  "What do I want — underneath the wanting him?",
+  "Who am I becoming through this experience?"
+];
+const promptMilestones={7:"One week of showing up for yourself. That's not small. 🌿",14:"Two weeks in. Read back your Day 1 entry — notice anything different?",21:"21 days is where new patterns start to feel natural. Keep going.",30:"Thirty days of choosing yourself through words. 🌿\n\nYou started this as someone searching for answers. You're finishing it as someone who has begun to trust herself."};
+function renderPrompt(){
+  const d=parseInt(localStorage.getItem('ss_prompt_day')||'0')%prompts.length;
+  document.getElementById('promptCard').innerHTML=`<h3>Day ${d+1} of 30</h3><p style="font-style:italic">"${prompts[d]}"</p>`;
+}
+function savePrompt(){
+  const r=document.getElementById('promptResp').value.trim();
+  if(!r){alert('Write something first — even one sentence.');return}
+  let d=parseInt(localStorage.getItem('ss_prompt_day')||'0');
+  localStorage.setItem(`ss_prompt_${d}`,r);
+  d=(d+1);localStorage.setItem('ss_prompt_day',d);
+  const msg=document.getElementById('promptMsg');
+  const milestone=promptMilestones[d];
+  msg.textContent=milestone||"Saved. 🌿 Come back tomorrow — consistency is where the healing lives.";
+  msg.style.display='block';
+  document.getElementById('promptResp').value='';
+  renderPrompt();
+}
+function loadPrompt(){
+  const d=parseInt(localStorage.getItem('ss_prompt_day')||'0');
+  const saved=localStorage.getItem(`ss_prompt_${Math.max(0,d-1)}`);
+  const msg=document.getElementById('promptMsg');
+  if(saved){msg.textContent=`Your last response:\n\n"${saved}"`;msg.style.display='block';}
+  else{msg.textContent="No saved response yet. Write something today. 🌿";msg.style.display='block';}
+}
+renderPrompt();
+
+// ── HELPERS ──
+function renderYN(containerId,questions,prefix){
+  const c=document.getElementById(containerId);
+  questions.forEach((q,i)=>{
+    c.insertAdjacentHTML('beforeend',`
+      <div class="qbox">
+        <p>${i+1}. ${q}</p>
+        <label style="display:inline-block;margin-right:16px"><input type="radio" name="${prefix}${i}" value="yes" style="accent-color:var(--btn)"> Yes</label>
+        <label><input type="radio" name="${prefix}${i}" value="no" style="accent-color:var(--btn)"> No</label>
+      </div>`);
+  });
+}
+function getYN(prefix,count){
+  return Array.from({length:count},(_,i)=>{
+    const v=document.querySelector(`input[name=${prefix}${i}]:checked`);
+    return v?v.value==='yes':null;
+  });
+}
+function copyText(id,btn){
+  const t=document.getElementById(id).textContent;
+  navigator.clipboard.writeText(t).then(()=>{
+    btn.textContent='Copied ✓';
+    setTimeout(()=>btn.textContent='Copy Script',2000);
+  });
+}
+</script>
+</body>
+</html>
