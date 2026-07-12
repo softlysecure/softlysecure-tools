@@ -320,7 +320,7 @@
   <section class="tool" id="t-timer">
     <h2>10-Minute Rule Timer</h2>
     <p>Feel the urge to text? Wait 10 minutes. You're rewiring your nervous system — one pause at a time.</p>
-    <div class="timer-phrase" id="timerPhrase">Every minute you wait is your nervous system finding its ground.</div>
+    <div class="timer-phrase" id="timerPhrase" style="display:none">Every minute you wait is your nervous system finding its ground.</div>
     <div class="timer" id="timerDisplay">10:00</div>
     <div class="row" style="justify-content:center; display:flex; gap:10px;">
       <button class="primary" onclick="startTimer()">Start</button>
@@ -537,6 +537,9 @@ function rotatePhrases(){
 function startTimer(){
   if(timerInt) return;
   document.getElementById('timerMsg').style.display='none';
+  const ph=document.getElementById('timerPhrase');
+  ph.style.display='block';
+  ph.textContent=timerPhrases[0];
   phraseInt=setInterval(rotatePhrases,12000);
   timerInt=setInterval(()=>{
     timeLeft--;
@@ -556,7 +559,7 @@ function resetTimer(){
   timeLeft=600;
   phraseIdx=0;
   document.getElementById('timerDisplay').textContent='10:00';
-  document.getElementById('timerPhrase').textContent=timerPhrases[0];
+  document.getElementById('timerPhrase').style.display='none';
   document.getElementById('timerMsg').style.display='none';
 }
 
